@@ -1,0 +1,8 @@
+streamlit~=1.32.2
+st_pages
+onnx
+insightface~=0.7.3
+onnxruntime
+streamlit_webrtc
+opencv-python
+av
