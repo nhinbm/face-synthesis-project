@@ -5,6 +5,7 @@ from insightface.app import FaceAnalysis
 from insightface.data import get_image as ins_get_image
 
 
+
 # Swapping Method
 def SWAP_FACE(imgCeleb, imgPerson):
     # Prepare model
@@ -60,7 +61,7 @@ def IMAGE_AND_VIDEO(pathImageCeleb, pathVideo):
     return out
 
 
-def CAPTURE_CAMERA(pathImageCeleb, app, swapper):
+def CAPTURE_CAMERA(pathImageCeleb):
     # Establish capture
     cap = cv2.VideoCapture(0)
 

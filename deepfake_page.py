@@ -1,7 +1,10 @@
 import streamlit as st
-from Model import IMAGE_AND_IMAGE, IMAGE_AND_VIDEO
+from Model import IMAGE_AND_IMAGE, IMAGE_AND_VIDEO, SWAP_FACE
 import os
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
+import subprocess
+import cv2
+import av
 
 # Constants
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
@@ -92,7 +95,9 @@ def function_two():
             st.write("**Kết quả:**")
             swap_video = IMAGE_AND_VIDEO("cache/famous_image.jpeg", "cache/person_video.mp4")
             if swap_video is not None:
-                st.video("cache/output_video.mp4")
+                command = ['ffmpeg', '-i', "cache/output_video.mp4", '-c:v', 'libx264', '-c:a', 'copy', "cache/output_video_st.mp4"]
+                subprocess.run(command)
+                st.video("cache/output_video_st.mp4")
 
 
 def function_three():
@@ -110,8 +115,17 @@ def function_three():
             with open(os.path.join("cache", "famous_image.jpeg"), "wb") as f:
                 f.write(famous_image.getbuffer())
             st.image(famous_image)
+    if famous_image is not None:
+        def CAPTURE_CAMERA_TEST(frame: av.VideoFrame):
+            imgCeleb = cv2.imread("cache/famous_image.jpeg")
+            print("------------------------ HELLO")
+            img = frame.to_ndarray(format="bgr24")
+            img = SWAP_FACE(imgCeleb, img)
+            return av.VideoFrame.from_ndarray(img, format="bgr24")
 
-    webrtc_streamer(key="sample")
+        webrtc_streamer(key="example",
+                        video_frame_callback=CAPTURE_CAMERA_TEST)
+
 
 
 if __name__ == "__main__":
